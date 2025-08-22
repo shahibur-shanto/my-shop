@@ -21,12 +21,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'phone',
-        'address',
-        'city',
-        'state',
-        'country',
-        'postal_code',
         'role',
 
 
@@ -73,5 +67,15 @@ class User extends Authenticatable
     public function cart()
     {
         return $this->hasOne(Cart::class);
+    }
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $user->profile()->create();
+        });
     }
 }
