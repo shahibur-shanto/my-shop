@@ -1,5 +1,13 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link,usePage,router} from '@inertiajs/vue3';
+import {computed} from 'vue';
+const page = usePage()
+const user = computed(() => page.props.auth.user)
+
+const logout = () => {
+    router.post(route('logout'));
+};
+
 
 const featuredProducts = [
     { id: 1, name: 'Product One', price: '$25', image: 'https://via.placeholder.com/150' },
@@ -22,11 +30,23 @@ const featuredProducts = [
                     <Link href="#" class="text-gray-700 hover:text-gray-900">Contact</Link>
                 </div>
                 <div>
+                    <template v-if="user">
+                        <span class="mr-4 text-gray-700 font-semibold">Hi, {{ user.name }}</span>
 
-                    <Link :href="route('login')" class="px-4 mx-2 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Login</Link>
+                        <Link
+                            :href="route('logout')"
+                            method="post"
+                            as="button"
+                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer"
+                        >
+                            Log out
+                        </Link>
+                    </template>
 
-                    <Link :href="route('register')" class="px-4 mx-2 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Sign up</Link>
-
+                    <template v-else>
+                        <Link :href="route('login')" class="px-4 mx-2 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Login</Link>
+                        <Link :href="route('register')" class="px-4 mx-2 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Sign up</Link>
+                    </template>
                 </div>
             </div>
         </nav>

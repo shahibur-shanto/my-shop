@@ -125,7 +125,7 @@
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600">
                         Already have an account?
-                        <a href="/login" class="text-indigo-600 hover:text-indigo-500 font-medium">Sign in</a>
+                        <Link :href="route('login')" class="text-indigo-600 hover:text-indigo-500 font-medium">Sign in</Link>
                     </p>
                 </div>
             </div>
@@ -135,7 +135,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { useForm,Link } from '@inertiajs/vue3'
 
 const form = useForm({
     name: '',
