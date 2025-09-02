@@ -3,10 +3,13 @@ import { Link } from "@inertiajs/vue3";
 
 const menuItems = [
     { name: "Dashboard", icon: "📊", route: route("admin.dashboard") },
+    { name: "Products", icon: "📦", route: route("admin.products.create") },
     { name: "Users", icon: "👤", route: "#" },
-    { name: "Products", icon: "📦", route: "#" },
     { name: "Orders", icon: "🛒", route: "#" },
     { name: "Settings", icon: "⚙️", route: "#" },
+    { name: "Add Category", icon: "🛒", route: "#" },
+    { name: "Add Brands", icon: "📦", route: route("admin.brands.create") },
+
 ];
 </script>
 
