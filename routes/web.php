@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Social\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,9 +23,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/brands/create', [BrandController::class, 'create'])->name('brands.create');
     Route::post('/brands/create', [BrandController::class, 'store'])->name('brands.store');
+
+    Route::get('/categories/create', [CategoriesController::class, 'create'])->name('categories.create');
+    Route::post('/categories/create', [CategoriesController::class, 'store'])->name('categories.store');
 });
-
-
 
 
 

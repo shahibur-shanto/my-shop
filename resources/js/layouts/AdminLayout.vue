@@ -7,7 +7,7 @@ const menuItems = [
     { name: "Users", icon: "👤", route: "#" },
     { name: "Orders", icon: "🛒", route: "#" },
     { name: "Settings", icon: "⚙️", route: "#" },
-    { name: "Add Category", icon: "🛒", route: "#" },
+    { name: "Add Category", icon: "🛒", route: route('admin.categories.create') },
     { name: "Add Brands", icon: "📦", route: route("admin.brands.create") },
 
 ];

@@ -4,10 +4,18 @@ import { Link } from '@inertiajs/vue3';
 import axios from 'axios'
 
 const loading = ref(false)
+const providers = [
+    { name: "google", label: "Continue with Google", color: "bg-white border hover:bg-gray-50", textColor: "text-gray-700", icon: "https://www.svgrepo.com/show/355037/google.svg" },
+    { name: "facebook", label: "Continue with Facebook", color: "bg-[#1877F2] hover:bg-[#166FE5]", textColor: "text-white", icon: "https://www.svgrepo.com/show/452196/facebook-1.svg" },
+    { name: "github", label: "Continue with GitHub", color: "bg-[#24292F] hover:bg-[#1F2429]", textColor: "text-white", icon: "https://www.svgrepo.com/show/512317/github-142.svg" }
+];
+
+
 
 const form = reactive({
     email: '',
     password: '',
+    name:'',
     remember: false,
 })
 
@@ -23,9 +31,7 @@ const login = async () => {
     }
 }
 
-const socialLogin = (provider) => {
-    window.location.href = `/auth/${provider}` // Laravel Socialite routes
-}
+
 </script>
 
 <template>
@@ -36,39 +42,54 @@ const socialLogin = (provider) => {
 
             <!-- Social Login -->
             <div class="flex flex-col space-y-3 mb-6">
+
+                <a
+                    v-for="provider in providers"
+                    :key="provider.name"
+                    :href="`/auth/${provider.name}/redirect`"
+                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition mb-2"
+                    :class="provider.color"
+                >
+      <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">
+        <img :src="provider.icon" :alt="provider.name" class="w-4 h-4" />
+      </span>
+                    <span :class="provider.textColor + ' font-medium'">
+        {{ provider.label }}
+      </span>
+                </a>
                 <!-- Google -->
-                <button
-                    @click="socialLogin('google')"
-                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-white border hover:bg-gray-50"
-                >
-          <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">
-            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-4 h-4" />
-          </span>
-                    <span class="text-gray-700 font-medium">Continue with Google</span>
-                </button>
+<!--                <a-->
+<!--                    :href="`/auth/facebook/redirect`"-->
+<!--                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-white border hover:bg-gray-50"-->
+<!--                >-->
+<!--          <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">-->
+<!--            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-4 h-4" />-->
+<!--          </span>-->
+<!--                    <span class="text-gray-700 font-medium">Continue with Google</span>-->
+<!--                </a>-->
 
-                <!-- Facebook -->
-                <button
-                    @click="socialLogin('facebook')"
-                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-[#1877F2] hover:bg-[#166FE5]"
-                >
-                    <!-- Put the icon on a white chip so it stays visible without CSS filters -->
-                    <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">
-            <img src="https://www.svgrepo.com/show/452196/facebook-1.svg" alt="Facebook" class="w-4 h-4" />
-          </span>
-                    <span class="text-white font-medium">Continue with Facebook</span>
-                </button>
+<!--                &lt;!&ndash; Facebook &ndash;&gt;-->
+<!--                <a-->
+<!--                    :href="`/auth/facebook/redirect`"-->
+<!--                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-[#1877F2] hover:bg-[#166FE5]"-->
+<!--                >-->
+<!--                    &lt;!&ndash; Put the icon on a white chip so it stays visible without CSS filters &ndash;&gt;-->
+<!--                    <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">-->
+<!--            <img src="https://www.svgrepo.com/show/452196/facebook-1.svg" alt="Facebook" class="w-4 h-4" />-->
+<!--          </span>-->
+<!--                    <span class="text-white font-medium">Continue with Facebook</span>-->
+<!--                </a>-->
 
-                <!-- GitHub -->
-                <button
-                    @click="socialLogin('github')"
-                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-[#24292F] hover:bg-[#1F2429]"
-                >
-          <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">
-            <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GitHub" class="w-4 h-4" />
-          </span>
-                    <span class="text-white font-medium">Continue with GitHub</span>
-                </button>
+<!--                &lt;!&ndash; GitHub &ndash;&gt;-->
+<!--                <a-->
+<!--                    :href="`/auth/github/redirect`"-->
+<!--                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-[#24292F] hover:bg-[#1F2429]"-->
+<!--                >-->
+<!--          <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">-->
+<!--            <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GitHub" class="w-4 h-4" />-->
+<!--          </span>-->
+<!--                    <span class="text-white font-medium">Continue with GitHub</span>-->
+<!--                </a>-->
             </div>
 
             <!-- Divider -->
