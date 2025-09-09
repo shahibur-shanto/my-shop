@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Social;
 
 use App\Http\Controllers\Controller;
+use App\Models\SocialProvider;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,23 +20,55 @@ class SocialAuthController extends Controller
 
     public function callback(string $provider){
 
+
         $providerUser = Socialite::driver( $provider)->user();
 
-        $existingUser = User::query()
-                        ->where('provider_name', $provider)
-                        ->where('provider_id',$providerUser->getId())
-                        ->first();
-        if($existingUser){
-            Auth::login($existingUser);
-            return to_route('home');
-        }
-        $user = User::create([
-            'name'=> $providerUser->getName(),
-            'email'=> $providerUser->getEmail(),
-            'password'=>str('123456789'),
-            'provider_name'=> $provider,
-            'provider_id'=>$providerUser->getId(),
-        ]);
+        $account = SocialProvider::query()
+                                ->where('provider',$provider)
+                                ->where('provider_id',$providerUser->getId())
+                                ->first();
+            if($account){
+                $user = $account->user;
+               Auth::login($user);
+               return to_route('home');
+
+            }
+            else{
+                $user = User::where('email', $providerUser->getEmail())->first();
+                if (!$user) {
+                    $user = User::create([
+                        'name'  => $providerUser->getName(),
+                        'email' => $providerUser->getEmail(),
+                    ]);
+                }
+
+                SocialProvider::create([
+                    'user_id'     =>$user->id,
+                    'email'       => $providerUser->getEmail(),
+                    'provider'    => $provider,
+                    'provider_id' => $providerUser->getId(),
+                    'avatar'      => $providerUser->getAvatar(),
+                ]);
+            }
+
+
+
+
+//            $existingUser = User::query()
+//                        ->where('provider_name', $provider)
+//                        ->where('provider_id',$providerUser->getId())
+//                        ->first();
+//        if($existingUser){
+//            Auth::login($existingUser);
+//            return to_route('home');
+//        }
+//        $user = User::create([
+//            'name'=> $providerUser->getName(),
+//            'email'=> $providerUser->getEmail(),
+//            'password'=>str('123456789'),
+//            'provider_name'=> $provider,
+//            'provider_id'=>$providerUser->getId(),
+//        ]);
         Auth::login($user);
         return to_route('home');
 
@@ -45,7 +78,7 @@ class SocialAuthController extends Controller
      */
     public function index()
     {
-        $user = Socialite::driver('github')->user();
+//        $user = Socialite::driver('github')->user();
     }
 
     /**
