@@ -57,39 +57,7 @@ const login = async () => {
         {{ provider.label }}
       </span>
                 </a>
-                <!-- Google -->
-<!--                <a-->
-<!--                    :href="`/auth/facebook/redirect`"-->
-<!--                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-white border hover:bg-gray-50"-->
-<!--                >-->
-<!--          <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">-->
-<!--            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-4 h-4" />-->
-<!--          </span>-->
-<!--                    <span class="text-gray-700 font-medium">Continue with Google</span>-->
-<!--                </a>-->
 
-<!--                &lt;!&ndash; Facebook &ndash;&gt;-->
-<!--                <a-->
-<!--                    :href="`/auth/facebook/redirect`"-->
-<!--                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-[#1877F2] hover:bg-[#166FE5]"-->
-<!--                >-->
-<!--                    &lt;!&ndash; Put the icon on a white chip so it stays visible without CSS filters &ndash;&gt;-->
-<!--                    <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">-->
-<!--            <img src="https://www.svgrepo.com/show/452196/facebook-1.svg" alt="Facebook" class="w-4 h-4" />-->
-<!--          </span>-->
-<!--                    <span class="text-white font-medium">Continue with Facebook</span>-->
-<!--                </a>-->
-
-<!--                &lt;!&ndash; GitHub &ndash;&gt;-->
-<!--                <a-->
-<!--                    :href="`/auth/github/redirect`"-->
-<!--                    class="flex items-center justify-center w-full py-2 px-4 rounded-lg shadow transition bg-[#24292F] hover:bg-[#1F2429]"-->
-<!--                >-->
-<!--          <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-white mr-2">-->
-<!--            <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GitHub" class="w-4 h-4" />-->
-<!--          </span>-->
-<!--                    <span class="text-white font-medium">Continue with GitHub</span>-->
-<!--                </a>-->
             </div>
 
             <!-- Divider -->
@@ -122,7 +90,7 @@ const login = async () => {
                         id="password"
                         type="password"
                         required
-                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full px-4 py-2 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="••••••••"
                     />
                 </div>

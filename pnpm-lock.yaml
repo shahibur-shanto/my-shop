@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@inertiajs/inertia':
+        specifier: ^0.11.1
+        version: 0.11.1
       '@inertiajs/vue3':
         specifier: ^2.1.0
         version: 2.1.2(vue@3.5.18(typescript@5.9.2))
@@ -363,6 +366,9 @@ packages:
 
   '@inertiajs/core@2.1.2':
     resolution: {integrity: sha512-fS3bDanwIZMEhtndhs1NvDvFN7y9Nx+FPkuBLSjIvYXFVmwieZmj+q2SYLXVl/jKt0qg69GwfLVrNm+gFiFbMg==}
+
+  '@inertiajs/inertia@0.11.1':
+    resolution: {integrity: sha512-btmV53c54oW4Z9XF0YyTdIUnM7ue0ONy3/KJOz6J1C5CYIwimiKfDMpz8ZbGJuxS+SPdOlNsqj2ZhlHslpJRZg==}
 
   '@inertiajs/vue3@2.1.2':
     resolution: {integrity: sha512-KZLvNUCMj5RXquJDhXkJStn9tMvA38tSOWry943LGKxIgpssf7zM7zsvVyIUQTQWbnqJrfn1TjxzIE2joUTUxQ==}
@@ -1052,6 +1058,9 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  axios@0.21.4:
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+
   axios@1.11.0:
     resolution: {integrity: sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==}
 
@@ -1147,6 +1156,10 @@ packages:
 
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
+
+  deepmerge@4.3.1:
+    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
+    engines: {node: '>=0.10.0'}
 
   defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
@@ -2282,6 +2295,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
+  '@inertiajs/inertia@0.11.1':
+    dependencies:
+      axios: 0.21.4
+      deepmerge: 4.3.1
+      qs: 6.14.0
+    transitivePeerDependencies:
+      - debug
+
   '@inertiajs/vue3@2.1.2(vue@3.5.18(typescript@5.9.2))':
     dependencies:
       '@inertiajs/core': 2.1.2
@@ -2897,6 +2918,12 @@ snapshots:
 
   asynckit@0.4.0: {}
 
+  axios@0.21.4:
+    dependencies:
+      follow-redirects: 1.15.11
+    transitivePeerDependencies:
+      - debug
+
   axios@1.11.0:
     dependencies:
       follow-redirects: 1.15.11
@@ -2992,6 +3019,8 @@ snapshots:
       ms: 2.1.3
 
   deep-is@0.1.4: {}
+
+  deepmerge@4.3.1: {}
 
   defu@6.1.4: {}
 

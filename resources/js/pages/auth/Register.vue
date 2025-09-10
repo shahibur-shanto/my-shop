@@ -14,15 +14,13 @@
                     <div>
                         <label for="signup-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-gray-400"></i>
-                            </div>
+
                             <input
                                 id="signup-name"
                                 v-model="form.name"
                                 type="text"
                                 required
-                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition"
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition text-gray-800 placeholder-gray-400"
                                 placeholder="Your Name"
                                 :class="{'border-red-500': form.errors.name}"
                             >
@@ -34,15 +32,13 @@
                     <div>
                         <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-gray-400"></i>
-                            </div>
+
                             <input
                                 id="signup-email"
                                 v-model="form.email"
                                 type="email"
                                 required
-                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition"
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition text-gray-800 placeholder-gray-400"
                                 placeholder="you@example.com"
                                 :class="{'border-red-500': form.errors.email}"
                             >
@@ -54,15 +50,13 @@
                     <div>
                         <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
-                            </div>
+
                             <input
                                 id="signup-password"
                                 v-model="form.password"
                                 type="password"
                                 required
-                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition"
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition text-gray-800 placeholder-gray-400"
                                 placeholder="••••••••"
                                 :class="{'border-red-500': form.errors.password}"
                             >
@@ -74,15 +68,13 @@
                     <div>
                         <label for="signup-confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
-                            </div>
+
                             <input
                                 id="signup-confirm-password"
                                 v-model="form.password_confirmation"
                                 type="password"
                                 required
-                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition"
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition text-gray-800 placeholder-gray-400"
                                 placeholder="••••••••"
                                 :class="{'border-red-500': passwordMismatch}"
                             >

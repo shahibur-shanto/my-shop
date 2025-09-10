@@ -50,15 +50,6 @@ const slides = [
     },
 ];
 
-
-
-
-
-
-
-
-
-
 const featuredProducts = [
     { id: 1, name: 'Product One', price: '$25', image: 'https://via.placeholder.com/150' },
     { id: 2, name: 'Product Two', price: '$30', image: 'https://via.placeholder.com/150' },
@@ -85,6 +76,13 @@ const featuredProducts = [
                 <div>
                     <template v-if="user">
                         <span class="mr-4 text-gray-700 font-semibold">Hi, {{ user.name }}</span>
+                        <Link
+                            :href="route('profile.edit')"
+                            as="button"
+                            class="px-4 py-2 mr-1 bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer"
+                        >
+                            Profile
+                        </Link>
 
                         <Link
                             :href="route('logout')"
