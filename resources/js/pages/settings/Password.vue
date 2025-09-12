@@ -17,85 +17,65 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: '/settings/password',
     },
 ];
-
+defineProps<{
+    hasPassword: boolean;
+    status:string;
+}>();
 const passwordInput = ref<HTMLInputElement | null>(null);
 const currentPasswordInput = ref<HTMLInputElement | null>(null);
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Password settings" />
+    <AppLayout :breadcrumbs="[{ title: hasPassword ? 'Change password' : 'Set password', href: '/settings/password' }]">
+        <Head :title="hasPassword ? 'Change password' : 'Set password'" />
 
         <SettingsLayout>
             <div class="space-y-6">
-                <HeadingSmall title="Update password" description="Ensure your account is using a long, random password to stay secure" />
+                <HeadingSmall
+                    :title="hasPassword ? 'Update password' : 'Set password'"
+                    description="Ensure your account is using a long, random password to stay secure"
+                />
+                <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
+                    {{ status }}
+                </div>
 
                 <Form
-                    method="put"
-                    :action="route('password.update')"
-                    :options="{
-                        preserveScroll: true,
-                    }"
+                    :method="hasPassword ? 'put' : 'post'"
+                    :action="hasPassword ? route('password.update') : route('password.set')"
+                    :options="{ preserveScroll: true }"
                     reset-on-success
-                    :reset-on-error="['password', 'password_confirmation', 'current_password']"
+                    :reset-on-error="['password','password_confirmation','current_password']"
                     class="space-y-6"
-                    v-slot="{ errors, processing, recentlySuccessful }"
+                    v-slot="{ errors, processing, recentlySuccessful}"
                 >
-                    <div class="grid gap-2">
+                    <!-- Current password only if user already has one -->
+                    <div v-if="hasPassword" class="grid gap-2">
                         <Label for="current_password">Current password</Label>
-                        <Input
-                            id="current_password"
-                            ref="currentPasswordInput"
-                            name="current_password"
-                            type="password"
-                            class="block w-full mt-1"
-                            autocomplete="current-password"
-                            placeholder="Current password"
-                        />
+                        <Input id="current_password" name="current_password" type="password" autocomplete="current-password" />
                         <InputError :message="errors.current_password" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password">New password</Label>
-                        <Input
-                            id="password"
-                            ref="passwordInput"
-                            name="password"
-                            type="password"
-                            class="block w-full mt-1"
-                            autocomplete="new-password"
-                            placeholder="New password"
-                        />
+                        <Label for="password">{{ hasPassword ? 'New password' : 'Set password' }}</Label>
+                        <Input id="password" name="password" type="password" autocomplete="new-password" />
                         <InputError :message="errors.password" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="password_confirmation">Confirm password</Label>
-                        <Input
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            type="password"
-                            class="block w-full mt-1"
-                            autocomplete="new-password"
-                            placeholder="Confirm password"
-                        />
+                        <Input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" />
                         <InputError :message="errors.password_confirmation" />
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <Button :disabled="processing">Save password</Button>
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p v-show="recentlySuccessful" class="text-sm text-neutral-600">Saved.</p>
-                        </Transition>
+                        <Button :disabled="processing">
+                            {{ hasPassword ? 'Update password' : 'Set password' }}
+                        </Button>
+<!--                        <p v-show="recentlySuccessful" class="text-sm text-neutral-600">Saved</p>-->
                     </div>
                 </Form>
             </div>
         </SettingsLayout>
     </AppLayout>
+
 </template>

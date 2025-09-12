@@ -15,9 +15,12 @@ class PasswordController extends Controller
     /**
      * Show the user's password settings page.
      */
-    public function edit(): Response
+    public function edit(Request $request): Response
     {
-        return Inertia::render('settings/Password');
+        return Inertia::render('settings/Password',[
+            'hasPassword' => filled($request->user()->password),
+            'status' => $request->session()->get('status'),
+        ]);
     }
 
     /**
@@ -29,11 +32,24 @@ class PasswordController extends Controller
             'current_password' => ['required', 'current_password'],
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
+        $request->user()->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        return to_route('password.edit')
+            ->with('status', 'Password updated successfully.');
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'password' => ['required', Password::defaults(), 'confirmed'],
+        ]);
 
         $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back();
+        return back()->with('status', __('Password Set Successfully'));
     }
 }

@@ -23,7 +23,7 @@ class ProfileController extends Controller
             [
                 'authUser' => $request->user(),
                 'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-                'status' => $request->session()->get('status'),
+
             ]
         );
     }

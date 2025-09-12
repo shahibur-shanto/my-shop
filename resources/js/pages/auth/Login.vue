@@ -101,7 +101,7 @@ const login = async () => {
                         <input type="checkbox" v-model="form.remember" class="mr-2 rounded border-gray-300" />
                         Remember me
                     </label>
-                    <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
+                    <Link :href="route('password.request')" class="text-sm text-blue-600 hover:underline">Forgot password?</Link>
                 </div>
 
                 <!-- Submit -->
