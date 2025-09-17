@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Social\SocialAuthController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -11,9 +13,7 @@ Route::get('/admin/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->name('admin.dashboard');
 
-Route::get('/', function () {
-    return Inertia::render('Home'); // Just render the Inertia page
-})->name('home');
+Route::get('/',[HomeController::class,'index'])->name('home');
 
 
 

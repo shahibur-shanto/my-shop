@@ -29,10 +29,25 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'required|image|max:2048', // max 2MB
+        ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('categories', 'public');
+        }
+
+
+
+
         Category::create([
             'name'=>$request->name,
+            'image' => $imagePath,
+//            'image'=>'image',
         ]);
-        return Inertia::render('Admin/Dashboard');
+       return redirect()->back()->with('success', 'Category added successfully!');
     }
 
     /**
