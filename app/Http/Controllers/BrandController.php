@@ -13,11 +13,18 @@ class BrandController extends Controller
     }
 
     public function store(Request $request){
+
+        $request->validate([
+            'name'=>'required|string|max:255',
+            'description'=>'string|max:255',
+            'website_url'=>'string|max:255'
+        ]);
+
         Brand::create([
             'name'=>$request->name,
             'description'=>$request->description,
             'website_url'=>$request->url,
         ]);
-        return Inertia::render('Admin/Dashboard');
+        return redirect()->back()->with('success', 'Brand added successfully!');
     }
 }
