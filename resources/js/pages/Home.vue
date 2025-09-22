@@ -4,13 +4,16 @@ import {computed, ref} from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Navigation, Autoplay } from 'swiper/modules';
+import {  Autoplay } from 'swiper/modules';
+import {useCart} from '../composables/useCart';
+
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
 
 defineProps({
-    categories: Array
+    categories: Array,
+    new_arrivals: Array,
 });
 
 // Hamburger toggle
@@ -19,14 +22,6 @@ const menuOpen = ref(false);
 const logout = () => {
     router.post(route('logout'));
 };
-
-
-const bgSlides = [
-    'https://fastly.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI',
-    'https://images.unsplash.com/photo-1707856191983-5f11c95b842b?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://via.placeholder.com/1600x600/3B82F6/FFFFFF?text=Slide+3',
-];
-
 const slides = [
     {
         bg: 'https://fastly.picsum.photos/id/866/200/300.jpg?hmac=rcadCENKh4rD6MAp6V_ma-AyWv641M4iiOpe1RyFHeI',
@@ -60,6 +55,13 @@ const featuredProducts = [
     { id: 3, name: 'Product Three', price: '$15', image: 'https://via.placeholder.com/150' },
     { id: 4, name: 'Product Four', price: '$50', image: 'https://via.placeholder.com/150' },
 ];
+
+const { cartItems, addToCart, totalItems, removeFromCart, cartTotal,increaseQuantity, decreaseQuantity } = useCart();
+const cartOpen = ref(false); // Controls the pop-up visibility
+const handleAddToCart = (product) => {
+    addToCart(product);
+    cartOpen.value = true;
+};
 </script>
 
 <template>
@@ -77,7 +79,7 @@ const featuredProducts = [
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-4">
-                    <Link href="#" class="text-gray-700 hover:text-gray-900">Home</Link>
+                    <Link :href="route('home')" class="text-gray-700 hover:text-gray-900">Home</Link>
                     <Link href="#" class="text-gray-700 hover:text-gray-900">Shop</Link>
                     <Link href="#" class="text-gray-700 hover:text-gray-900">About</Link>
                     <Link href="#" class="text-gray-700 hover:text-gray-900">Contact</Link>
@@ -85,6 +87,16 @@ const featuredProducts = [
 
                 <!-- Auth Buttons Desktop -->
                 <div class="hidden md:flex items-center space-x-2">
+                    <div class="relative">
+                        <button @click="cartOpen = !cartOpen" class="text-gray-700 hover:text-gray-900 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </button>
+                        <span v-if="totalItems > 0" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+            {{ totalItems }}
+        </span>
+                    </div>
                     <template v-if="user">
                         <span class="mr-2 text-gray-700 font-semibold">Hi, {{ user.name }}</span>
                         <Link :href="route('profile.edit')" as="button"
@@ -110,12 +122,27 @@ const featuredProducts = [
             </div>
 
             <!-- Mobile Menu -->
+
+
+
+
             <div v-show="menuOpen" class="md:hidden bg-green-100 absolute top-full left-0 w-full shadow-md z-10 transition-all duration-300">
                 <div class="flex flex-col px-6 py-4 space-y-2">
                     <Link href="#" class="text-gray-700 hover:text-gray-900">Home</Link>
                     <Link href="#" class="text-gray-700 hover:text-gray-900">Shop</Link>
                     <Link href="#" class="text-gray-700 hover:text-gray-900">About</Link>
                     <Link href="#" class="text-gray-700 hover:text-gray-900">Contact</Link>
+
+                    <div v-show="menuOpen" class="md:hidden bg-green-100 absolute top-full left-0 w-full shadow-md z-10 transition-all duration-300">
+                        <div class="flex flex-col px-6 py-4 space-y-2">
+                            <button @click="cartOpen = !cartOpen" class="w-full text-left flex items-center space-x-2 text-gray-700 hover:text-gray-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span>Cart ({{ totalItems }})</span>
+                            </button>
+                        </div>
+                    </div>
 
                     <template v-if="user">
                         <Link :href="route('profile.edit')" as="button"
@@ -187,13 +214,16 @@ const featuredProducts = [
 
         <!-- Featured Products -->
         <section class="container mx-auto py-12">
-            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center">Featured Products</h2>
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-start">New Arrival</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                <div v-for="product in featuredProducts" :key="product.id" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
-                    <img :src="product.image" alt="product" class="rounded mb-4 w-full h-40 object-cover">
-                    <h3 class="font-bold text-lg text-center">{{ product.name }}</h3>
-                    <p class="text-gray-700">{{ product.price }}</p>
-                    <Link href="#" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full text-center">Add to Cart</Link>
+                <div v-for="new_arrival in new_arrivals" :key="new_arrival.id" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
+                    <img :src="new_arrival.image" alt="product" class="rounded mb-4 w-full h-40 object-cover">
+                    <div class="w-full">
+                        <h3 class="font-bold text-lg text-center whitespace-nowrap overflow-hidden text-ellipsis">{{ new_arrival.name }}</h3>
+                    </div>
+                    <p class="text-gray-700">{{ new_arrival.price }}</p>
+<!--                    <Link href="#" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full text-center">Add to Cart</Link>-->
+                    <button @click="handleAddToCart(new_arrival)" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full text-center cursor-pointer">Add to Cart</button>
                 </div>
             </div>
         </section>
@@ -206,7 +236,7 @@ const featuredProducts = [
                     <img :src="product.image" alt="product" class="rounded mb-4 w-full h-40 object-cover">
                     <h3 class="font-bold text-lg text-center">{{ product.name }}</h3>
                     <p class="text-gray-700">{{ product.price }}</p>
-                    <Link href="#" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full text-center">Add to Cart</Link>
+                    <button @click="handleAddToCart(product)" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full text-center cursor-pointer">Add to Cart</button>
                 </div>
             </div>
         </section>
@@ -263,5 +293,57 @@ const featuredProducts = [
                 </div>
             </div>
         </footer>
+    </div>
+
+    <div v-if="cartOpen" @click.self="cartOpen = false" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex justify-end">
+        <div class="relative w-full md:w-96 h-full bg-white shadow-lg flex flex-col">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-xl font-semibold">Your Cart</h3>
+                <button @click="cartOpen = false" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="flex-grow overflow-y-auto p-4 space-y-4">
+                <div v-if="cartItems.length === 0" class="text-center text-gray-500 mt-12">
+                    Your cart is empty.
+                </div>
+                <div v-for="item in cartItems" :key="item.id" class="flex items-center space-x-4 border-b pb-4">
+                    <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded">
+                    <div class="flex-grow">
+                        <h4 class="font-medium">{{ item.name }}</h4>
+                        <p class="text-gray-800 font-semibold">${{ (parseFloat(item.price.replace('$', '')) * item.quantity).toFixed(2) }}</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button @click="decreaseQuantity(item.id)" class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center hover:bg-gray-300 transition-colors">
+                            -
+                        </button>
+                        <span class="text-sm font-medium">{{ item.quantity }}</span>
+                        <button @click="increaseQuantity(item.id)" class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center hover:bg-gray-300 transition-colors">
+                            +
+                        </button>
+                    </div>
+
+                    <button @click="removeFromCart(item.id)" class="text-red-500 hover:text-red-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div v-if="cartItems.length > 0" class="p-4 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold">Total:</span>
+                    <span class="text-lg font-bold text-blue-600">${{ cartTotal }}</span>
+                </div>
+                <button class="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
     </div>
 </template>

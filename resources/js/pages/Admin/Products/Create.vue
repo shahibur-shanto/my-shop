@@ -4,6 +4,9 @@ import {useForm, usePage} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
 
 
+
+
+const imagePreview = ref(null)
 const fileInput = ref(null);
 const nativeForm = ref(null)      // native <form> element
 const fileInputKey = ref(0)
@@ -12,19 +15,36 @@ const page = usePage()
 const categories = page.props.categories;
 const brands = page.props.brands;
 
-const form = useForm({
-    name: "",
-    price: "",
-    category_id:'',
-    brand_id:'',
-    description: "",
-    quantity: "",
-});
 
-const successMessage = ref(page.props.flash?.success || '')
-watch(() => page.props.flash, (flash) => {
-    successMessage.value = flash?.success || ''
-})
+
+function previewImage(e) {
+    const file = e.target.files?.[0] ?? null
+    if (!file) {
+        form.image = null
+        if (imagePreview.value) {
+            URL.revokeObjectURL(imagePreview.value)
+            imagePreview.value = null
+        }
+        return
+    }
+
+    // basic client-side type check
+    if (!file.type.startsWith('image/')) {
+        form.errors.image = 'Please select a valid image file.'
+        form.image = null
+        return
+    }
+
+    // revoke old preview if present
+    if (imagePreview.value) {
+        URL.revokeObjectURL(imagePreview.value)
+    }
+
+    form.image = file
+    imagePreview.value = URL.createObjectURL(file)
+    form.errors.image = null
+}
+
 
 function clearFileInputDom() {
     // 1) try native form reset (clears most inputs incl file)
@@ -46,22 +66,52 @@ function clearFileInputDom() {
 }
 
 
-const submit = () => {
-    form.post(route("admin.products.store"),{
+const form = useForm({
+    name: "",
+    price: "",
+    category_id:'',
+    brand_id:'',
+    description: "",
+    quantity: "",
+    image:"",
+});
+
+const successMessage = ref(page.props.flash?.success || '')
+watch(() => page.props.flash, (flash) => {
+    successMessage.value = flash?.success || ''
+})
+
+
+function submit() {
+    if (!form.image) {
+        form.errors.image = 'Please select an image.'
+        return
+    }
+
+
+    form.post(route('admin.products.store'), {
         preserveScroll: true,
         onSuccess: () => {
-        // clear Inertia form state
-        form.reset()
-        // DOM-level clearing
-        clearFileInputDom()
+            // clear Inertia form state
+            form.reset()
+            form.image = null
 
-        // set success message from flash (will arrive via Inertia share)
-        successMessage.value = page.props.flash?.success || 'Product added successfully!'
-    },
+            // revoke object url and clear preview
+            if (imagePreview.value) {
+                URL.revokeObjectURL(imagePreview.value)
+                imagePreview.value = null
+            }
+
+            // DOM-level clearing
+            clearFileInputDom()
+
+            // set success message from flash (will arrive via Inertia share)
+            successMessage.value = page.props.flash?.success || 'Category added successfully!'
+        },
         onError: () => {
-        // keep preview if validation failed
-    },
-})
+            // keep preview if validation failed
+        },
+    })
 }
 </script>
 
@@ -124,6 +174,24 @@ const submit = () => {
                 <label class="block font-semibold">Stock</label>
                 <input v-model="form.quantity" type="number" class="w-full border p-2 rounded" />
                 <div v-if="form.errors.quantity" class="text-red-500 text-sm">{{ form.errors.quantity }}</div>
+            </div>
+            <div>
+                <label class="block font-semibold">Product Image</label>
+                <!-- key forces a fresh DOM node when we increment fileInputKey -->
+                <input
+                    ref="fileInput"
+                    :key="fileInputKey"
+                    type="file"
+                    @change="previewImage"
+                    accept="image/*"
+                    class="w-full border p-2 rounded"
+                />
+                <div v-if="form.errors.image" class="text-red-500 text-sm">{{ form.errors.image }}</div>
+
+                <div v-if="imagePreview" class="mt-4">
+                    <p class="text-gray-600 text-sm">Preview:</p>
+                    <img :src="imagePreview" alt="Category Preview" class="w-32 h-32 object-cover border rounded" />
+                </div>
             </div>
 
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">

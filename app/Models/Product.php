@@ -13,5 +13,7 @@ class Product extends Model
     'brand_id',
     'description',
     'quantity',
+    'image',
+
     ];
 }

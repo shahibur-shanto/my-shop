@@ -26,8 +26,21 @@ class ProductController extends Controller
             'quantity'       => 'required|integer',
             'category_id' => 'required|exists:categories,id',
             'brand_id'    => 'required|exists:brands,id',
+            'image' => 'required|image|max:2048',
         ]);
-        Product::create($validated);
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
+        Product::create([
+            'name'=>$request->name,
+            'price'=>$request->price,
+            'description'=>$request->description,
+            'quantity'=>$request->quantity,
+            'category_id'=>$request->category_id,
+            'brand_id'=>$request->brand_id,
+            'image' => $imagePath,
+        ]);
 
         return redirect()->back()->with('success', 'Product added successfully!');
     }
