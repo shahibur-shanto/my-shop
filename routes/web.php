@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Social\SocialAuthController;
@@ -28,6 +29,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/categories/create', [CategoriesController::class, 'create'])->name('categories.create');
     Route::post('/categories/create', [CategoriesController::class, 'store'])->name('categories.store');
 });
+
+
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+});
+
+
 
 
 

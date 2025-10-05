@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,4 +49,36 @@ class AuthenticatedSessionController extends Controller
 
         return redirect()->route('home');
     }
+
+//    protected function authenticated(Request $request, $user)
+//    {
+//        $sessionId = $request->session()->getId();
+//
+//        $sessionCart = Cart::where('session_id', $sessionId)->first();
+//
+//        if ($sessionCart) {
+//            $userCart = Cart::firstOrCreate(['user_id' => $user->id]);
+//
+//            // Merge session items into user cart
+//            foreach ($sessionCart->items as $item) {
+//                $existingItem = $userCart->items()
+//                    ->where('product_id', $item->product_id)
+//                    ->where('variant_id', $item->variant_id)
+//                    ->first();
+//
+//                if ($existingItem) {
+//                    $existingItem->quantity += $item->quantity;
+//                    $existingItem->save();
+//                } else {
+//                    $userCart->items()->create([
+//                        'product_id' => $item->product_id,
+//                        'variant_id' => $item->variant_id,
+//                        'quantity' => $item->quantity,
+//                    ]);
+//                }
+//            }
+//
+//            $sessionCart->delete();
+//        }
+//    }
 }
