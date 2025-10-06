@@ -1,4 +1,4 @@
-// resources/js/composables/useCart.js
+
 import { ref, computed } from 'vue';
 import axios from 'axios';
 import { router } from '@inertiajs/vue3';
@@ -85,7 +85,8 @@ export function useCart(user) {
         for (const item of cartItems.value) {
             await removeFromCart(item.id);
         }
-        cartItems.value = [];
+        cartItems.value = []
+        cartTotal.value = 0 // Reset cart count
     };
 
     // Computed properties

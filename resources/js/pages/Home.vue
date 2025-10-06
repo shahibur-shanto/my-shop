@@ -23,6 +23,7 @@ const menuOpen = ref(false);
 
 const logout = () => {
     router.post(route('logout'));
+    clearCart();
 };
 
 const slides = [
@@ -59,7 +60,7 @@ const featuredProducts = [
     { id: 4, name: 'Product Four', price: '$50', image: 'https://via.placeholder.com/150' },
 ];
 
-const { cartItems, cartOpen, addToCart, increaseQuantity, decreaseQuantity, removeFromCart, fetchCart, totalItems, cartTotal } = useCart(user);
+const { cartItems, cartOpen, clearCart, increaseQuantity, decreaseQuantity, removeFromCart, fetchCart, totalItems, cartTotal } = useCart(user);
 
 const handleAddToCart = async (product, quantity = 1) => {
 
@@ -109,7 +110,13 @@ const handleAddToCart = async (product, quantity = 1) => {
                     <template v-if="user">
                         <span class="mr-2 text-gray-700 font-semibold">Hi, {{ user.name }}</span>
                         <Link :href="route('profile.edit')" as="button" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Profile</Link>
-                        <Link :href="route('logout')" method="post" as="button" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Log out</Link>
+                        <button
+                            @click="logout"
+                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                        >
+                            Log out
+                        </button>
+<!--                        <Link :href="route('logout')" method="post" as="button" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Log out</Link>-->
                     </template>
                     <template v-else>
                         <Link :href="route('login')" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Login</Link>
@@ -215,45 +222,9 @@ const handleAddToCart = async (product, quantity = 1) => {
                     </div>
                 </section>
 
-                <!-- Featured Products -->
-                <section class="container mx-auto py-12">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center">Featured Products</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                        <div v-for="product in featuredProducts" :key="product.id" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
-                            <img :src="product.image" alt="product" class="rounded mb-4 w-full h-40 object-cover">
-                            <h3 class="font-bold text-lg text-center">{{ product.name }}</h3>
-                            <p class="text-gray-700">{{ product.price }}</p>
-                            <button @click="handleAddToCart(product)" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full text-center cursor-pointer">Add to Cart</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Featured Products -->
-                <section class="container mx-auto py-12">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center">Featured Products</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                        <div v-for="product in featuredProducts" :key="product.id" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
-                            <img :src="product.image" alt="product" class="rounded mb-4 w-full h-40 object-cover">
-                            <h3 class="font-bold text-lg text-center">{{ product.name }}</h3>
-                            <p class="text-gray-700">{{ product.price }}</p>
-                            <Link href="#" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full text-center">Add to Cart</Link>
-                        </div>
-                    </div>
-                </section>
 
 
-                <!-- Featured Products -->
-                <section class="container mx-auto py-12">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center">Featured Products</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                        <div v-for="product in featuredProducts" :key="product.id" class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
-                            <img :src="product.image" alt="product" class="rounded mb-4 w-full h-40 object-cover">
-                            <h3 class="font-bold text-lg text-center">{{ product.name }}</h3>
-                            <p class="text-gray-700">{{ product.price }}</p>
-                            <Link href="#" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full text-center">Add to Cart</Link>
-                        </div>
-                    </div>
-                </section>
+
 
 
                 <!-- Featured Products -->
