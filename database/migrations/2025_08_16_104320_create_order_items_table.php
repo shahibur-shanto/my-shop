@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('variant_name')->nullable();
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
-            $table->decimal('total', 10, 2);
+            $table->decimal('total', 10, 2)->nullable();
             $table->timestamps();
         });
     }

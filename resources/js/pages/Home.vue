@@ -60,7 +60,7 @@ const featuredProducts = [
     { id: 4, name: 'Product Four', price: '$50', image: 'https://via.placeholder.com/150' },
 ];
 
-const { cartItems, cartOpen, clearCart, increaseQuantity, decreaseQuantity, removeFromCart, fetchCart, totalItems, cartTotal } = useCart(user);
+const { cartItems, cartOpen, clearCart, addToCart, increaseQuantity, decreaseQuantity, removeFromCart, fetchCart, totalItems, cartTotal } = useCart(user);
 
 const handleAddToCart = async (product, quantity = 1) => {
 

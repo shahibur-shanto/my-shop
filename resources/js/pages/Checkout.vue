@@ -1,142 +1,120 @@
 <script setup>
-import { onMounted } from 'vue';
-import { useCart } from '../composables/useCart';
-import { router } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useCart } from '../composables/useCart'
+import { router } from '@inertiajs/vue3'
+import { usePage } from '@inertiajs/vue3'
 
-const { cartItems, fetchCart, cartTotal, clearCart } = useCart();
+const page = usePage()
+const user = page.props?.auth?.user || null
+
+const { cartItems, fetchCart, cartTotal, clearCart } = useCart()
+const isLoading = ref(false)
+
+// Billing form
+const form = ref({
+    billing_first_name: '',
+    billing_last_name: '',
+    billing_email: '',
+    billing_phone: '',
+    billing_address: '',
+    billing_city: '',
+    billing_state: '',
+    billing_country: '',
+    billing_postal_code: '',
+    payment_method: 'cod'
+})
 
 onMounted(() => {
-    fetchCart(); // Load cart from database
-});
+    fetchCart()
 
-const placeOrder = () => {
-    if (cartItems.value.length === 0) {
-        alert('Your cart is empty!');
-        return;
+    // Prefill user data if logged in
+    if (user) {
+        form.value.billing_first_name = user.name?.split(' ')[0] || ''
+        form.value.billing_last_name = user.name?.split(' ')[1] || ''
+        form.value.billing_email = user.email || ''
+    }
+})
+
+// Checkout logic
+const placeOrder = async () => {
+    if (!user) {
+        router.get('/login')
+        return
     }
 
-    router.post('/checkout', { cart: cartItems.value }, {
-        onSuccess: () => {
-            clearCart();
-            alert('Order placed successfully!');
-        },
-        onError: () => alert('Something went wrong!'),
-    });
-};
+    if (cartItems.value.length === 0) {
+        alert('Your cart is empty!')
+        return
+    }
+
+    isLoading.value = true
+
+    try {
+        const res = await axios.post('/api/checkout', {
+            ...form.value,
+        })
+
+        alert(`✅ ${res.data.message}\nOrder No: ${res.data.order_number}`)
+        await clearCart()
+        router.visit('/') // Redirect to order list page (optional)
+    } catch (err) {
+        alert('❌ Checkout failed: ' + (err.response?.data?.message || err.message))
+    } finally {
+        isLoading.value = false
+    }
+}
 </script>
 
 <template>
-    <div class="container mx-auto py-12">
+    <div class="max-w-3xl mx-auto p-6 bg-white shadow rounded">
         <h2 class="text-2xl font-bold mb-4">Checkout</h2>
 
         <div v-if="cartItems.length === 0" class="text-gray-500">
             Your cart is empty.
         </div>
 
-        <div v-else>
-            <div v-for="item in cartItems" :key="item.id" class="flex justify-between mb-2">
-                <span>{{ item.product.name }} x {{ item.quantity }}</span>
-                <span>${{ (parseFloat(item.product.price) * item.quantity).toFixed(2) }}</span>
+        <form v-else @submit.prevent="placeOrder" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <input v-model="form.billing_first_name" placeholder="First Name" required class="border p-2 rounded" />
+                <input v-model="form.billing_last_name" placeholder="Last Name" required class="border p-2 rounded" />
+            </div>
+            <input v-model="form.billing_email" placeholder="Email" type="email" required class="border p-2 rounded w-full" />
+            <input v-model="form.billing_phone" placeholder="Phone" required class="border p-2 rounded w-full" />
+            <input v-model="form.billing_address" placeholder="Address" required class="border p-2 rounded w-full" />
+            <div class="grid grid-cols-2 gap-4">
+                <input v-model="form.billing_city" placeholder="City" required class="border p-2 rounded" />
+                <input v-model="form.billing_state" placeholder="State" required class="border p-2 rounded" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <input v-model="form.billing_country" placeholder="Country" required class="border p-2 rounded" />
+                <input v-model="form.billing_postal_code" placeholder="Postal Code" required class="border p-2 rounded" />
             </div>
 
-            <div class="flex justify-between font-bold mt-4">
-                <span>Total:</span>
-                <span>${{ cartTotal }}</span>
+            <div>
+                <label class="block mb-2 font-medium">Payment Method:</label>
+                <select v-model="form.payment_method" class="border p-2 rounded w-full">
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="bkash">Bkash</option>
+                </select>
             </div>
 
-            <button @click="placeOrder" class="mt-6 px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700">
-                Place Order
+            <div class="border-t pt-4 mt-4">
+                <div v-for="item in cartItems" :key="item.id" class="flex justify-between mb-2 text-gray-700">
+                    <span>{{ item.name }} × {{ item.quantity }}</span>
+                    <span>${{ (parseFloat(item.price) * item.quantity).toFixed(2) }}</span>
+                </div>
+
+                <div class="flex justify-between font-bold text-lg mt-4">
+                    <span>Total:</span>
+                    <span>${{ cartTotal }}</span>
+                </div>
+            </div>
+
+            <button type="submit" :disabled="isLoading"
+                    class="w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                {{ isLoading ? 'Processing...' : 'Place Order' }}
             </button>
-        </div>
+        </form>
     </div>
 </template>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<script setup>-->
-<!--import { ref, computed } from 'vue';-->
-<!--import { usePage, Link, router } from '@inertiajs/vue3';-->
-
-<!--const page = usePage();-->
-<!--// const cartItems = ref(page.props.cartItems || []);-->
-
-<!--const cartItems = ref(JSON.parse(localStorage.getItem('cart')) || []);-->
-
-<!--const cartTotal = computed(() => {-->
-<!--    return cartItems.value-->
-<!--        .reduce((sum, item) => sum + parseFloat(item.price.replace('$', '')) * item.quantity, 0)-->
-<!--        .toFixed(2);-->
-<!--});-->
-
-<!--const placeOrder = () => {-->
-<!--    // Send cartItems to server for order processing-->
-<!--    // Example using Inertia POST:-->
-<!--    // router.post('/checkout', { cart: cartItems.value });-->
-
-<!--    localStorage.removeItem('cart'); // Clear cart after checkout-->
-<!--    alert('Order placed successfully!');-->
-
-<!--}-->
-
-<!--// const cartTotal = computed(() => {-->
-<!--//     return cartItems.value.reduce((sum, item) => {-->
-<!--//         const price = parseFloat(item.price.replace('$','')) || 0;-->
-<!--//         return sum + price * item.quantity;-->
-<!--//     }, 0).toFixed(2);-->
-<!--// });-->
-<!--//-->
-<!--// const placeOrder = () => {-->
-<!--//     router.post(route('checkout.store'));-->
-<!--// };-->
-<!--</script>-->
-
-<!--<template>-->
-<!--    <div class="container mx-auto py-12">-->
-<!--        <h1 class="text-3xl font-bold mb-6">Checkout</h1>-->
-
-<!--        <div v-if="cartItems.length === 0" class="text-gray-500">-->
-<!--            Your cart is empty.-->
-<!--        </div>-->
-
-<!--        <div v-else class="space-y-6">-->
-<!--            <div v-for="item in cartItems" :key="item.id" class="flex justify-between items-center border-b pb-2">-->
-<!--                <div class="flex items-center space-x-4">-->
-<!--                    <img :src="item.image" class="w-16 h-16 object-cover rounded">-->
-<!--                    <div>-->
-<!--                        <h4 class="font-medium">{{ item.name }}</h4>-->
-<!--                        <p class="text-gray-600">{{ item.quantity }} × {{ item.price }}</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <p class="font-semibold">${{ (parseFloat(item.price.replace('$','')) * item.quantity).toFixed(2) }}</p>-->
-<!--            </div>-->
-
-<!--            <div class="flex justify-between text-lg font-bold mt-4">-->
-<!--                <span>Total:</span>-->
-<!--                <span>${{ cartTotal }}</span>-->
-<!--            </div>-->
-
-<!--            <button @click="placeOrder" class="w-full mt-4 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">-->
-<!--                Place Order-->
-<!--            </button>-->
-
-<!--            <Link href="/" class="block mt-2 text-center text-blue-600 hover:underline">-->
-<!--                Continue Shopping-->
-<!--            </Link>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</template>-->

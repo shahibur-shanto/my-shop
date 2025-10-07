@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,5 +44,12 @@ Route::middleware(['web','auth'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'add']);
     Route::put('/cart/update/{id}', [CartController::class, 'update']);
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove']);
+    Route::post('/checkout', [CheckoutController::class, 'checkout']);
+
+});
+
+Route::middleware(['web','auth'])->group(function () {
+    Route::get('/orders', [OrderController::class, 'index']); // All user orders
+    Route::get('/orders/{id}', [OrderController::class, 'show']); // Order details
 });
 

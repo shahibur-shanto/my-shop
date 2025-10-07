@@ -4,6 +4,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Social\SocialAuthController;
 use App\Models\Category;
@@ -36,7 +37,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+
+
+    Route::get('/orders', function () {
+        return Inertia::render('Orders');
+    }); // All user orders
+    Route::get('/orders/{id}', function () {
+
+        return Inertia::render('OrderDetails');
+    });
+
+
 });
+
 
 
 
