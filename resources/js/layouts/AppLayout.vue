@@ -94,18 +94,83 @@ const logout = () => {
         </main>
 
         <!-- 🌙 Footer -->
-        <footer class="bg-gray-800 text-gray-200 py-6">
-            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                <p>&copy; 2025 NoumiMart. All rights reserved.</p>
-                <div class="flex space-x-4 mt-4 md:mt-0">
-                    <Link href="#" class="hover:text-white">Facebook</Link>
-                    <Link href="#" class="hover:text-white">Twitter</Link>
-                    <Link href="#" class="hover:text-white">Instagram</Link>
+        <footer class="bg-[#031a17] text-gray-300 pt-10 pb-4 mt-auto">
+            <div class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-semibold text-white mb-3">Noumi Mart</h3>
+                    <p class="text-sm mb-4">
+                        Your one-stop shop for paints, crafts, stationery, and kids’ art.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-gray-800 hover:bg-green-600 p-2 rounded-full">
+                            <i class="fab fa-facebook-f">Facebook</i>
+                        </a>
+                        <a href="#" class="bg-gray-800 hover:bg-green-600 p-2 rounded-full">
+                            <i class="fab fa-whatsapp">Whatsapp </i>
+                        </a>
+                    </div>
                 </div>
+
+                <!-- About Links -->
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-3">About Noumi Mart</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><Link href="#" class="hover:text-white">About Us</Link></li>
+                        <li><Link href="#" class="hover:text-white">Contact Us</Link></li>
+                        <li><Link href="#" class="hover:text-white">Terms & Conditions</Link></li>
+                    </ul>
+                </div>
+
+                <!-- Categories -->
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-3">Categories</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><Link href="#" class="hover:text-white">School Stationery</Link></li>
+                        <li><Link href="#" class="hover:text-white">Calculator</Link></li>
+                        <li><Link href="#" class="hover:text-white">Kids Zone & Toys</Link></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-3">Store Information</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M17.657 16.657L13.414 12.414a4 4 0 015.657-5.657l3.243 3.243a4 4 0 01-5.657 5.657z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M6 12a9 9 0 0118 0c0 5.523-4.477 10-10 10S6 17.523 6 12z"/>
+                            </svg>
+                            <span>Mirpur-13<br> Dhaka 1216</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M3 5h2l3.6 7.59L5.25 18a1 1 0 001.75 1h10a1 1 0 001-1l1.35-5.41L21 5H3z"/>
+                            </svg>
+                            <span>Call us: 01717464016</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-700 mt-8 mb-4"></div>
+
+            <!-- Bottom Bar -->
+            <div class="container mx-auto px-6 flex justify-center items-center text-sm text-gray-400">
+                <p class="text-center">
+                    2025 Copyright By <span class="text-white">NoumiMart</span>. All Rights Reserved.
+                </p>
             </div>
         </footer>
 
-            <!-- Cart Slide-over -->
+
+        <!-- Cart Slide-over -->
             <transition name="slide-fade">
                 <div v-if="cartOpen" class="fixed inset-0 z-50 flex justify-end">
                     <!-- Clickable blur layer -->
