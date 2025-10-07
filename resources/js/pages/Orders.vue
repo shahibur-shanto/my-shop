@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import AppLayout from "@/layouts/AppLayout.vue";
 
 const orders = ref([]);
 const loading = ref(true);
@@ -22,6 +23,7 @@ onMounted(async () => {
 </script>
 
 <template>
+    <AppLayout>
     <div class="p-6">
         <h1 class="text-2xl font-bold mb-4">My Orders</h1>
         <div v-if="loading" class="text-gray-500">Loading...</div>
@@ -49,4 +51,5 @@ onMounted(async () => {
             </table>
         </div>
     </div>
+    </AppLayout>
 </template>

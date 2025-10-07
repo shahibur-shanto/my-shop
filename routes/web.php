@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders', function () {
         return Inertia::render('Orders');
-    }); // All user orders
+    })->name('orders.index'); // All user orders
     Route::get('/orders/{id}', function () {
 
         return Inertia::render('OrderDetails');
