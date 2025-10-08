@@ -38,7 +38,10 @@ const logout = () => {
                     <Link href="#" class="text-gray-700 hover:text-gray-900">Shop</Link>
                     <Link href="#" class="text-gray-700 hover:text-gray-900">About</Link>
                     <Link href="#" class="text-gray-700 hover:text-gray-900">Contact</Link>
-                    <Link :href="route('orders.index')" class="text-gray-700 hover:text-gray-900">My Order</Link>
+                   <template v-if='user'>
+                       <Link :href="route('orders.index')" class="text-gray-700 hover:text-gray-900">My Order</Link>
+                   </template>
+
                 </div>
 
                 <!-- Auth Buttons + Cart -->

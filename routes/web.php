@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}', function () {
 
         return Inertia::render('OrderDetails');
-    });
+    })->name('orders.details');
 
 
 });
