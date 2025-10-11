@@ -25,6 +25,8 @@ class HomeController extends Controller
                 $new_arrival->image = $new_arrival->image
                     ? Storage::url($new_arrival->image)
                     : null;
+
+
                 return $new_arrival;
             });
 

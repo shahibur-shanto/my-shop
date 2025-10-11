@@ -56,8 +56,13 @@ const placeOrder = async () => {
         })
 
         alert(`✅ ${res.data.message}\nOrder No: ${res.data.order_number}`)
-        await clearCart()
-        router.visit('/') // Redirect to order list page (optional)
+
+        router.get(route('home')) // Redirect to order list page (optional)
+        await clearCart();
+        // setTimeout(() => {
+        //     clearCart()
+        // }, 400)
+
     } catch (err) {
         alert('❌ Checkout failed: ' + (err.response?.data?.message || err.message))
     } finally {

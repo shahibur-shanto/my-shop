@@ -15,6 +15,11 @@ onMounted(() => {
     }
 })
 
+const proceedToCheckout = () => {
+    cartOpen.value = false // 👈 Close cart first
+    router.get(route('checkout.index')) // 👈 Then navigate
+}
+
 const logout = () => {
     router.post(route('logout'))
     clearCart()
@@ -173,63 +178,108 @@ const logout = () => {
         </footer>
 
 
-        <!-- Cart Slide-over -->
-            <transition name="slide-fade">
-                <div v-if="cartOpen" class="fixed inset-0 z-50 flex justify-end">
-                    <!-- Clickable blur layer -->
-                    <div @click="cartOpen = false" class="absolute inset-0 cursor-pointer"></div>
+        <!-- 🌙 Cart Slide-over -->
+        <transition name="slide-fade">
+            <div v-if="cartOpen" class="fixed inset-0 z-50 flex justify-end">
+                <!-- 🌫️ Background overlay with blur + fade -->
+                <transition name="fade-blur">
+                    <div
+                        v-if="cartOpen"
+                        @click="cartOpen = false"
+                        class="absolute inset-0 bg-black/40 backdrop-blur-sm cursor-pointer"
+                    ></div>
+                </transition>
 
-                    <!-- Cart panel -->
-                    <div class="relative w-full md:w-96 h-full bg-white shadow-2xl flex flex-col transition-transform duration-300">
-                        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                            <h3 class="text-xl font-semibold">Your Cart</h3>
-                            <button @click="cartOpen = false" class="text-gray-500 hover:text-gray-700 focus:outline-none">✕</button>
+                <!-- 🛒 Cart panel (animated target) -->
+                <div
+                    class="relative w-full md:w-96 h-full bg-white shadow-2xl flex flex-col"
+                >
+                    <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold">Your Cart</h3>
+                        <button
+                            @click="cartOpen = false"
+                            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                        >✕</button>
+                    </div>
+
+                    <div class="flex-grow overflow-y-auto p-4 space-y-4">
+                        <div v-if="cartItems.length === 0" class="text-center text-gray-500 mt-12">
+                            Your cart is empty.
                         </div>
 
-                        <div class="flex-grow overflow-y-auto p-4 space-y-4">
-                            <div v-if="cartItems.length === 0" class="text-center text-gray-500 mt-12">
-                                Your cart is empty.
+                        <div
+                            v-for="item in cartItems"
+                            :key="item.id"
+                            class="flex items-center space-x-4 border-b pb-4"
+                        >
+                            <img
+                                :src="`http://localhost:8000/storage/${item.image}`"
+                                :alt="item.name"
+                                class="w-16 h-16 object-cover rounded"
+                            />
+                            <div class="flex-grow">
+                                <h4 class="font-medium">{{ item.name }}</h4>
+                                <p class="text-gray-800 font-semibold">
+                                    ${{ (parseFloat(item.price) * item.quantity).toFixed(2) }}
+                                </p>
                             </div>
-                            <div v-for="item in cartItems" :key="item.id" class="flex items-center space-x-4 border-b pb-4">
-                                <img :src="`http://127.0.0.1:8000/storage/${item.image}`" :alt="item.name"
-                                     class="w-16 h-16 object-cover rounded" />
-                                <div class="flex-grow">
-                                    <h4 class="font-medium">{{ item.name }}</h4>
-                                    <p class="text-gray-800 font-semibold">${{ (parseFloat(item.price.replace('$', '')) * item.quantity).toFixed(2) }}</p>
-                                </div>
 
-                                <div class="flex items-center space-x-2">
-                                    <button @click="decreaseQuantity(item)" class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center hover:bg-gray-300 transition-colors">-</button>
-                                    <span class="text-sm font-medium">{{ item.quantity }}</span>
-                                    <button @click="increaseQuantity(item)" class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center hover:bg-gray-300 transition-colors">+</button>
-                                </div>
-
-                                <button @click="removeFromCart(item.id)" class="text-red-500 hover:text-red-700">🗑</button>
+                            <div class="flex items-center space-x-2">
+                                <button
+                                    @click="decreaseQuantity(item)"
+                                    class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center hover:bg-gray-300 transition-colors"
+                                >−</button>
+                                <span class="text-sm font-medium">{{ item.quantity }}</span>
+                                <button
+                                    @click="increaseQuantity(item)"
+                                    class="bg-gray-200 text-gray-700 rounded-full w-6 h-6 flex items-center justify-center hover:bg-gray-300 transition-colors"
+                                >+</button>
                             </div>
-                        </div>
 
-                        <div v-if="cartItems.length > 0" class="p-4 border-t border-gray-200">
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="text-lg font-bold">Total:</span>
-                                <span class="text-lg font-bold text-blue-600">${{ cartTotal }}</span>
-                            </div>
-                            <button @click="router.get(route('checkout.index'))" class="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
-                                Proceed to Checkout
-                            </button>
+                            <button
+                                @click="removeFromCart(item.id)"
+                                class="text-red-500 hover:text-red-700"
+                            >🗑</button>
                         </div>
                     </div>
+
+                    <div v-if="cartItems.length > 0" class="p-4 border-t border-gray-200">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-lg font-bold">Total:</span>
+                            <span class="text-lg font-bold text-blue-600">${{ cartTotal }}</span>
+                        </div>
+                        <button
+                            @click="proceedToCheckout"
+                            class="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                        >
+                            Proceed to Checkout
+                        </button>
+                    </div>
                 </div>
-            </transition>
+            </div>
+        </transition>
     </div>
 </template>
 
 <style>
+/* 🛒 Slide-in from right */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-    transition: transform 0.3s ease;
+    transition: transform 0.35s ease;
 }
 .slide-fade-enter-from,
 .slide-fade-leave-to {
     transform: translateX(100%);
+}
+
+/* 🌫️ Background blur + fade */
+.fade-blur-enter-active,
+.fade-blur-leave-active {
+    transition: opacity 0.35s ease, backdrop-filter 0.35s ease;
+}
+.fade-blur-enter-from,
+.fade-blur-leave-to {
+    opacity: 0;
+    backdrop-filter: blur(0px);
 }
 </style>
